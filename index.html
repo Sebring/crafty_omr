@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<title>
+			Socket Game
+		</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crafty/0.9.0/crafty-min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="src/game.js"></script>
+
+		<style>
+			body {
+background-color: silver;
+				text-align:center;
+
+			}
+			body > div {
+				margin: auto;
+
+			}
+		</style>
+	</head>
+	<body>
+
+
+		<div id="nameContainer"><label>Namn:</label><input type="text"><button id="submitName">send</button></div>
+
+
+		<script>
+$(function() {
+	console.log('- jQuery -')
+	let g = new Game()
+	g.start();
+	//var socket = io()
+	//var player = {}
+
+/*
+	Game.socket.on('accept_connection', function () {
+		console.log('IO: connection_accept')
+		$("#nameContainer").show()
+		$("#submitName").on('click', function() {
+			joinGame($("#nameContainer input").val())
+			$("#nameContainer").hide()
+		})
+	})
+
+	socket.on('accept_join', function(_player) {
+		player = _player;
+		console.log('join accept', _player);
+	})
+	function joinGame(name) {
+		player.name = name
+		socket.emit('join', player)
+
+	}
+*/
+})
+
+		</script>
+	</body>
+</html>
