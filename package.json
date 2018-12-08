@@ -1,0 +1,37 @@
+{
+  "name": "omr-game",
+  "version": "0.0.1",
+  "description": "A snake game built with cratyjs and socket.io\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Dmultiplayer snake\u001b[2~ game built using craftyjs and socket.io",
+  "main": "server.js",
+  "engines": {
+    "node": "8.12.0"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sebring/crafty_omr.git"
+  },
+  "keywords": [
+    "game",
+    "multiplayer",
+    "snake",
+    "omr",
+    "craftyjs",
+    "socket.io",
+    "node"
+  ],
+  "author": "Johan Sebring",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sebring/crafty_omr/issues"
+  },
+  "homepage": "https://github.com/Sebring/crafty_omr#readme"
+}
