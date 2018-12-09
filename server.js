@@ -4,11 +4,7 @@ var app = express()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 var utils = require('./server/src/utils')
-var E = require('./server/src/engine')
-var S = require('./server/src/settings')
-var L = require('./server/src/levels')
-
-L.initLevels()
+var G = require('/server/src/game')
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/index.html')
@@ -20,7 +16,7 @@ http.listen(process.env.PORT || 3000, function () {
 	console.log('listening on *:3000')
 })
 
-E.setCallback(function(state) {
+G.setCallback(function(state) {
 	io.emit('update_game', state)
 })
 
@@ -33,18 +29,21 @@ io.on('connection', function(socket) {
 
 	socket.emit('accept_connection')
 
-	let currentPlayer = {
+	let currentPlayer = G.addPlayer(socket.id)
+	/*
+	{
 		id: socket.id,
+		// FIXME - Move to *Game*
 		direction: 2,
 		x: 20,
 		y: 20,
 		grow: 0,
-		hue: utils.hsvToRgb((Math.random() * 360)/360, 0.8, 0.5)
-	}
+
+	}*/
 
 	// disconnect
 	socket.on('disconnect', function () {
-		E.removePlayer(currentPlayer.id)
+		G.removePlayer(currentPlayer.id)
 		console.log('user disconnected', currentPlayer.id)
 	})
 
@@ -55,7 +54,7 @@ io.on('connection', function(socket) {
 			socket.disconnect()
 		}
 		currentPlayer.name = player.name;
-		currentPlayer = E.addPlayer(currentPlayer)
+		currentPlayer = G.addPlayer(currentPlayer)
 		socket.emit("accept_join", currentPlayer, L.levels)
 	})
 

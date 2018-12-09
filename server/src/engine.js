@@ -1,73 +1,8 @@
-var S = require('./settings')
-var L = require('./levels')
-
 var _players = []
 var _others = []
 var otherId = 0
-var callback = function(){ console.log('e cb')}
 var _board = {}
 var _static_board = {}
-var timer
-
-function createSegment(x, y, playerId) {
-	return { type: 'body', x, y, playerId }
-}
-
-function addPlayer(player) {
-
-	// FIXME - move to settings
-
-	player.direction = 2
-	player.cells = []
-
-	player.cells[0] = {type: 'head', x:player.x, y:player.y, playerId: player.id }
-	for (let i = 0; i < 5; i++) {
-		let c = createSegment(player.x - 1 - (1 * i), player.y, player.id)
-		console.log('player', player)
-		player.cells.push(c)
-	}
-
-	_players.push(player)
-
-	if (_players.length > 1) {
-		_players[1].direction = 1
-	}
-	addFood()
-	return player;
-}
-
-function removePlayer(playerId) {
-	console.log('remove', playerId)
-	const index = _players.findIndex(player => player.id === playerId)
-	if (index != -1) {
-		let pp = _players.splice(index, 1)
-		console.log(' - removed player')
-	}
-}
-
-function setDirection(direction, playerId) {
-	let player = _players.find(p => (p.id === playerId))
-	if (!player) return;
-	player.direction = direction
-}
-
-function setCallback(cb) {
-	callback = cb
-}
-
-function loadLevel(level) {
-	_static_board = L.convertLevel(L.levels)
-}
-
-function startGame() {
-	loadLevel()
-	timer = setInterval(function () {
-		_players = tick()
-		if (callback) {
-			callback([_players, _others])
-		}
-	}, 1000 / S.speed)
-}
 
 function togglePause() {
 	if (timer)
@@ -84,7 +19,6 @@ function pauseGame() {
 function getPlayerFromCell(cell) {
 	return _players.find(p => { return p.id === cell.playerId })
 }
-
 
 function getRandomInclusive(max, min) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -167,19 +101,22 @@ function kill(player) {
 	}
 }
 
-function tick() {
-	// empty board
-	_board = Object.assign({}, _static_board) // need to make level compatible with this
+function update(actors) {
+	// quick bail if no players
+	if (!actors.players.length) return actors
+
+	// clear board
+	_board = Object.assign({}, actors.static) // need to make level compatible with this
 
 	let key = ''
-	for (const o of _others) {
+	for (const o of actors.items) {
 		key = `${o.x} ${o.y}`
 		_board[key] = [o]
 	}
 
 	let hasGrown = false;
 	// update omr cell positions
-	for (const p of _players) {
+	for (const p of actors.players) {
 		// update in reverse direction
 		for(let N = p.cells.length, i=N-1;i>0; i--) {
 			if (p.grow && !hasGrown) {
@@ -213,7 +150,7 @@ function tick() {
 			// p.cells[i] = c
 
 	}
-	for(const p of _players) {
+	for(const p of actors.players) {
 		// update head in direction
 		const c = p.cells[0]
 		switch (p.direction) {
@@ -244,19 +181,12 @@ function tick() {
 		if (addCell)
 			_board[key].push(c)
 	}
-	return _players
+	return actors
 }
 
 // super hacky thing to determine whether this is a node module or inlined via script tag
 if (!this.navigator) {
 	module.exports = {
-		players: _players,
-		addPlayer,
-		setCallback,
-		removePlayer,
-		setDirection,
-		togglePause,
-		startGame,
-		pauseGame
+		update
 	}
 }

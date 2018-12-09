@@ -1,9 +1,10 @@
 var _height = 50
 var _width = 100
-var _level = 1
+var currentLevel = 1
 var _board = {}
 var growth = 3
 var speed = 10
+var playerSize = 3
 
 function level(level) {
 	_level = level || _level
@@ -25,5 +26,7 @@ function getSettings() {
 }
 
 module.exports = {
-	growth, speed, level, width, height, getSettings
+	currentLevel, growth, speed, level,
+	width, height, playerSize,
+	getSettings
 }
