@@ -56,7 +56,7 @@ function setCallback(cb) {
 }
 
 function loadLevel(level) {
-	_static_board = L.convertLevel(L.levels[0])
+	_static_board = L.convertLevel(L.levels)
 }
 
 function startGame() {

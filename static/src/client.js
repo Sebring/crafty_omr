@@ -106,7 +106,7 @@ class Game {
 
 	loadLevel(level) {
 		console.log('level', level)
-		for (const cell of level[0]) {
+		for (const cell of level.cells) {
 			let o = Crafty.e("2D, WebGL, Color, Level")
 			o.attr({
 				x: cell.x * 10,
