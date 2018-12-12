@@ -3,8 +3,8 @@ var express = require('express')
 var app = express()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
-var utils = require('./server/src/utils')
-var G = require('/server/src/game')
+var G = require('./server/src/game')
+var L = require('./server/src/levels')
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/index.html')
@@ -25,49 +25,39 @@ io.on('connection', function(socket) {
 
 	if (!validateSocket(socket)) {
 		socket.disconnect()
+		return;
 	}
-
 	socket.emit('accept_connection')
 
 	let currentPlayer = G.addPlayer(socket.id)
-	/*
-	{
-		id: socket.id,
-		// FIXME - Move to *Game*
-		direction: 2,
-		x: 20,
-		y: 20,
-		grow: 0,
-
-	}*/
 
 	// disconnect
 	socket.on('disconnect', function () {
-		G.removePlayer(currentPlayer.id)
-		console.log('user disconnected', currentPlayer.id)
+		G.removePlayer(socket.id)
+		console.log('user disconnected', socket.id)
 	})
 
 	// join
-	socket.on('join', function (player) {
+	socket.on('join', function (name) {
 		console.log('join')
-		if (!validateName(player.name)) {
+		if (!validateName(name)) {
 			socket.disconnect()
 		}
-		currentPlayer.name = player.name;
-		currentPlayer = G.addPlayer(currentPlayer)
-		socket.emit("accept_join", currentPlayer, L.levels)
+		currentPlayer.name = name;
+		// currentPlayer = G.addPlayer(currentPlayer)
+		socket.emit("accept_join", currentPlayer)
 	})
 
 	// ready to start game
 	socket.on('ready_start', function() {
 		console.log('ReadyStart')
-
-		console.log('Current no of players', E.players.length)
 		socket.emit('player_status', currentPlayer)
+		socket.emit('level', G.getLevel())
 	})
 
 	// input
 	socket.on('input', function(input) {
+		// move to *Game*
 		currentPlayer.direction = input
 	})
 
@@ -77,7 +67,7 @@ io.on('connection', function(socket) {
 		console.log('action', action)
 		switch(action) {
 			case 'PAUSE':
-				E.togglePause()
+				G.togglePause()
 				break;
 		}
 	})

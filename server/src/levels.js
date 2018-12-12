@@ -9,7 +9,7 @@ function initLevels() {
 	cells.push({x:98, y:0, h:50, w:2, type: 'solid'})
 	cells.push({x:2, y:0, h:2, w:96, type: 'solid'})
 	cells.push({x:2, y:48, h:2, w:96, type: 'solid'})
-	level.cells = level
+	level.cells = cells
 	level.settings = {name: '1', growth: '2' }
 
 	_levels.push(level)
@@ -31,6 +31,7 @@ function getLevelByName(name) {
 * Convert level to fit the *Engine*
 */
 function convertLevel(level) {
+	// console.log('Level', level)
 	const convert = []
 	const cLevel = {}
 	for (const l of level.cells)
@@ -48,5 +49,7 @@ function convertLevel(level) {
 module.exports = {
 	levels : _levels,
 	initLevels,
-	convertLevel
+	convertLevel,
+	getLevel,
+	getLevelByName
 }

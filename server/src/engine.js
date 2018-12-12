@@ -1,20 +1,12 @@
+var P = require('./player')
+
 var _players = []
 var _others = []
 var otherId = 0
 var _board = {}
 var _static_board = {}
 
-function togglePause() {
-	if (timer)
-		pauseGame()
-	else
-		startGame()
-}
 
-function pauseGame() {
-	clearInterval(timer)
-	timer = null;
-}
 
 function getPlayerFromCell(cell) {
 	return _players.find(p => { return p.id === cell.playerId })
@@ -102,11 +94,12 @@ function kill(player) {
 }
 
 function update(actors) {
+	// console.log('*Engine* update', actors.players)
 	// quick bail if no players
-	if (!actors.players.length) return actors
+	if (!actors.players || !actors.players.length) return actors
 
 	// clear board
-	_board = Object.assign({}, actors.static) // need to make level compatible with this
+	_board = Object.assign({}, actors.static)
 
 	let key = ''
 	for (const o of actors.items) {
@@ -121,13 +114,12 @@ function update(actors) {
 		for(let N = p.cells.length, i=N-1;i>0; i--) {
 			if (p.grow && !hasGrown) {
 				i = 1
-				let growCell = createSegment(p.cells[i].x, p.cells[i].y, p.id)
+				let growCell = P.createCell(p, p.cells[i].x, p.cells[i].y, 'body')
 				p.cells.splice(1, 0, growCell)
 				p.grow--
 				hasGrown = true
 			}
 			let c = p.cells[i]
-			// TODO: handle growth
 			// update all but head
 			const cc = p.cells[i-1]
 			c.x = cc.x

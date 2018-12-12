@@ -3,7 +3,7 @@ var _width = 100
 var currentLevel = 1
 var _board = {}
 var growth = 3
-var speed = 10
+var speed = 1
 var playerSize = 3
 
 function level(level) {

@@ -27,10 +27,7 @@ class Game {
 					G.socket.emit('action', 'PAUSE')
 
 			}
-
-
-			})
-
+		})
 		this.connect()
 	}
 
@@ -41,11 +38,23 @@ class Game {
 		})
 	}
 
+	onConnected() {
+		console.log('connected!', this)
+		this.player.name = 'Sebring'
+		this.join()
+	}
+
 	join() {
 		this.socket.on('accept_join', (player, level) => {
-			this.onJoined(player, level)
+			this.onJoined(player)
 		})
-		this.socket.emit('join', this.player)
+		this.socket.emit('join', this.player.name)
+	}
+
+	onJoined(player) {
+		console.log('joined', player)
+		this.player = player
+		this.startGame()
 	}
 
 	startGame() {
@@ -55,21 +64,16 @@ class Game {
 		this.socket.on('player_status', (player) => {
 			this.onPlayerUpdate(player)
 		})
+		this.socket.on('level', (level) => {
+			this.onLevel(level)
+		})
 		console.log('emit')
 		this.socket.emit('ready_start')
 	}
 
-	onConnected() {
-		console.log('connected!', this)
-		this.player.name = 'Sebring'
-		this.join()
-	}
-
-	onJoined(player, level) {
-		this.player = player
-		console.log('onJoined', level)
+	onLevel(level) {
+		console.log('level', level)
 		this.loadLevel(level)
-		this.startGame()
 	}
 
 	onPlayerUpdate(player) {
@@ -77,7 +81,7 @@ class Game {
 	}
 
 	onGameUpdate(game_state) {
-		// console.log(game_state[0])
+		console.log(game_state)
 
 		Crafty('Cell, Other').destroy()
 
